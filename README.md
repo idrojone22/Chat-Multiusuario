@@ -1,7 +1,7 @@
 # Chat Multiusuario
 
 
-*[Control versions](#Control-versions)
+[Control versions](#Control-versions)
 
 9/01/2024
 

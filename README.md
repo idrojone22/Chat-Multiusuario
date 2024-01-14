@@ -6,11 +6,11 @@
 
 ## Index
 
-*[Title](#Title)
+[Title](#Title)
 
-*[Index](#Index)
+[Index](#Index)
 
-*[Control versions](#📜-control-versions)
+[Control versions](#📜-control-versions)
 
 ## 📜 Control versions
 

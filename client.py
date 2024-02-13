@@ -1,4 +1,5 @@
 import socket
+import json
 import threading
 from tkinter import *
 from tkinter.scrolledtext import ScrolledText
@@ -42,8 +43,7 @@ def client_program():
 
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client_socket.connect((host, port))
-
-    username = input(f"\n[+] Introduce tu usuario: ")
+    username = input("Introduzca su nombre de usuario: ")
     client_socket.sendall(username.encode())
 
     window = Tk()
@@ -63,8 +63,8 @@ def client_program():
     button_widget = Button(frame_widget, text='Enviar', command=lambda: send_message(client_socket, username, text_widget, entry_widget))
     button_widget.pack(side=RIGHT, padx=5)
 
-    users_widget = Button(window, text="Listar usuarios", command=lambda: list_users_request(client_socket))
-    users_widget.pack(padx=5, pady=5)
+    # users_widget = Button(window, text="Listar usuarios", command=lambda: list_users_request(client_socket))
+    # users_widget.pack(padx=5, pady=5)
 
     exit_widget = Button(window, text="Salir", command=lambda: exit_request(client_socket, username, window, window_closed))
     exit_widget.pack(padx=5, pady=5)
@@ -79,3 +79,4 @@ def client_program():
 
 if __name__ == '__main__':
     client_program()
+

@@ -1,16 +1,10 @@
 import socket
 import threading
+import json
 
-def client_thread(client_socket, clients, usernames):
-    username = client_socket.recv(1024).decode()
-    
-    if username in usernames.values():
-        print(f"\n[!] El nombre de usuario '{username}' ya está en uso. Cerrando conexión.")
-        client_socket.sendall("[!] Nombre de usuario ya en uso. Por favor, elige otro.\n".encode())
-        client_socket.close()
-        return
-    
-    usernames[client_socket] = username
+def client_thread(client_socket, clients, usernames, username):
+   
+    # usernames[client_socket] = username
     print(f"\n[+] El usuario {username} se ha conectado al chat")
 
     for client in clients:
@@ -25,7 +19,7 @@ def client_thread(client_socket, clients, usernames):
                 break
             
             if message == "!usuarios":
-                client_socket.sendall(f"\n[+] Listado de usuarios disponibles: {','.join(usernames.values())}\n\n".encode())
+                client_socket.sendall(f"\n[+] Listado de usuarios conectados: {','.join(usernames.values())}\n\n".encode())
                 continue
 
             for client in clients:
@@ -37,11 +31,14 @@ def client_thread(client_socket, clients, usernames):
 
     client_socket.close()
     clients.remove(client_socket)
-    del usernames[client_socket]
+    #del usernames[client_socket]
 
 def server_program(): 
     host = '192.168.1.44'
     port = 12345
+
+    clients = []
+    usernames = []
 
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -49,19 +46,17 @@ def server_program():
     server_socket.listen()
 
     print(f"\n[+] El servidor está en escucha de conexiones entrantes...")
-
-    clients = []
-    usernames = {}
     
     while True:
         client_socket, address = server_socket.accept()
+        username = client_socket.recv(1024).decode()
         clients.append(client_socket)
 
-        print(f"\n[+] Se ha conectado un nuevo cliente: {address}")
-
-        thread = threading.Thread(target=client_thread, args=(client_socket, clients, usernames))
+        thread = threading.Thread(target=client_thread, args=(client_socket, clients, usernames, username))
         thread.daemon = True
         thread.start()
+
+        print(f"\n[+] Se ha conectado un nuevo cliente: {address}, {usernames}")
     
     server_socket.close()
 
